@@ -1,6 +1,12 @@
 # MCP Puppeteer Custom
 
-A Managed Control Panel (MCP) server for browser automation using Puppeteer. This server provides a comprehensive set of tools for web testing, debugging, and automation through a simple HTTP API.
+A Model Context Protocol (MCP) server for browser automation using Puppeteer. This server provides a comprehensive set of tools for web testing, debugging, and automation through a simple HTTP API.
+
+## What is Model Context Protocol (MCP)?
+
+The Model Context Protocol (MCP) is an open standard developed by Anthropic that enables AI assistants to interact with external tools and data sources. It acts as a bridge between AI models and various data sources, including APIs, databases, and local files.
+
+This MCP server specifically provides browser automation capabilities through Puppeteer, allowing AI assistants in tools like Cursor IDE to control a browser, take screenshots, interact with web pages, and more.
 
 ## Features
 
@@ -106,7 +112,15 @@ curl -X POST http://localhost:3025/mcp -H "Content-Type: application/json" -d '{
 
 ## Integration with Cursor
 
-This MCP server can be integrated with Cursor IDE by adding it to your Cursor MCP configuration.
+This MCP server can be integrated with Cursor IDE by adding it to your Cursor MCP configuration. This allows the AI assistant in Cursor to interact with web pages, debug web applications, and automate browser tasks.
+
+## Attribution
+
+This project uses the following open-source software:
+
+- [Puppeteer](https://github.com/puppeteer/puppeteer) - A Node.js library which provides a high-level API to control Chrome/Chromium over the DevTools Protocol (Apache-2.0 License)
+- [Express](https://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js (MIT License)
+- [CORS](https://github.com/expressjs/cors) - CORS middleware for Express (MIT License)
 
 ## License
 
