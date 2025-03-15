@@ -1,0 +1,27 @@
+{
+  "name": "mcp-puppeteer-custom",
+  "version": "1.0.0",
+  "description": "A comprehensive Puppeteer MCP server for browser automation, testing, and debugging",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["mcp", "puppeteer", "browser", "automation", "testing", "debugging", "cursor"],
+  "author": "Shawn",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.10.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "puppeteer": "^21.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/mcp-puppeteer-custom.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/mcp-puppeteer-custom/issues"
+  },
+  "homepage": "https://github.com/yourusername/mcp-puppeteer-custom#readme"
+}
