@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 const fs = require('fs');
 const path = require('path');
 const { Anthropic } = require('@anthropic-ai/sdk');
@@ -32,12 +34,17 @@ let isNetworkMonitoring = false;
 // Initialize browser
 async function initBrowser() {
   if (!browser) {
-    console.log('Launching browser...');
+    console.log('Launching browser in stealth mode...');
     browser = await puppeteer.launch({
       headless: false,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: [
+        '--no-sandbox', 
+        '--disable-setuid-sandbox',
+        '--disable-blink-features=AutomationControlled', // Disable automation flag
+        '--window-size=1280,800'
+      ]
     });
-    console.log('Browser launched successfully');
+    console.log('Browser launched successfully in stealth mode');
   }
   
   // Always create a fresh page for each request
@@ -50,8 +57,32 @@ async function initBrowser() {
   }
   
   page = await browser.newPage();
+  
+  // Additional stealth measures
+  await page.evaluateOnNewDocument(() => {
+    // Overwrite the 'webdriver' property to prevent detection
+    Object.defineProperty(navigator, 'webdriver', {
+      get: () => false
+    });
+    
+    // Overwrite the plugins to use a custom length
+    Object.defineProperty(navigator, 'plugins', {
+      get: () => {
+        return {
+          length: 3,
+          item: () => { return {}; }
+        };
+      }
+    });
+    
+    // Overwrite the languages property
+    Object.defineProperty(navigator, 'languages', {
+      get: () => ['en-US', 'en']
+    });
+  });
+  
   await page.setViewport({ width: 1280, height: 800 });
-  console.log('Page created successfully');
+  console.log('Page created successfully with stealth mode');
   
   return { browser, page };
 }
@@ -619,10 +650,42 @@ async function navigateTo(url) {
     url = 'https://' + url;
   }
   
-  await page.goto(url, { waitUntil: 'networkidle2' });
+  console.log(`Attempting to navigate to: ${url}`);
+  
+  // Add retry logic
+  let retries = 3;
+  let success = false;
+  let error = null;
+  
+  while (retries > 0 && !success) {
+    try {
+      // Set a longer timeout for navigation
+      await page.goto(url, { 
+        waitUntil: 'networkidle2',
+        timeout: 30000 // 30 seconds timeout
+      });
+      success = true;
+    } catch (err) {
+      error = err;
+      console.log(`Navigation attempt failed (${retries} retries left): ${err.message}`);
+      retries--;
+      
+      if (retries > 0) {
+        console.log(`Waiting 2 seconds before retrying...`);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
+  }
+  
+  if (!success) {
+    console.error(`Failed to navigate to ${url} after multiple attempts:`, error);
+    throw new Error(`Failed to navigate to ${url}: ${error.message}`);
+  }
   
   const title = await page.title();
   const currentUrl = page.url();
+  
+  console.log(`Successfully navigated to: ${currentUrl} (${title})`);
   
   return {
     title,

@@ -7,14 +7,24 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["mcp", "puppeteer", "browser", "automation", "testing", "debugging", "cursor"],
+  "keywords": [
+    "mcp",
+    "puppeteer",
+    "browser",
+    "automation",
+    "testing",
+    "debugging",
+    "cursor"
+  ],
   "author": "Shawn",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.10.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "puppeteer": "^21.0.0"
+    "puppeteer": "^21.0.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   },
   "repository": {
     "type": "git",
